@@ -9,6 +9,11 @@ Assignment 3 - Local Descriptor based Image Classification
 
     $ pip install -r requirements.txt
 
+[Download Caltech 101 dataset](https://drive.google.com/drive/folders/1hwfdetoGWqt0jdePmQvLska1ccEeBHOe?usp=sharing)
+to `Dataset/Caltech20`
+
+Results are saved to `Data/`
+
 ## Image Classification Pipeline
 
 - Compute local descriptors
