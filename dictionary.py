@@ -9,9 +9,12 @@ def get_dictionary(dictname, K=21):
     else:
         raise Exception('Invalid option')
 
-def add_descriptors(img, dictionary, descriptor, desc_per_img=20):
+def add_descriptors(impath, indices, dictionary, descriptor, desc_per_img=20):
+    img = cv.imread(impath)
+    assert img is not None
     _, desc = descriptor.detectAndCompute(img, None)
-    if desc is None: pass
+    if desc is None:
+        return
     np.random.shuffle(desc)
     desc = desc[0:desc_per_img, :]
     dictionary.add(desc)

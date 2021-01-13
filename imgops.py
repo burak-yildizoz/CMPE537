@@ -14,7 +14,7 @@ def plt_imshow(img):
     plt.show()
 
 def loop_images(func,   # function to be called on each image
-                params, # func(img, *params)
+                params, # func(impath, (taxon_id, img_id), *params)
                 taxons_path='Dataset/Caltech20/training/',
                 dry_run=True):
     taxons = os.listdir(taxons_path)
@@ -24,13 +24,13 @@ def loop_images(func,   # function to be called on each image
         for i_i, imname in enumerate(imnames, start=1):
             impath = os.path.join(taxon_path, imname)
             assert os.path.isfile(impath), 'Could not find %s' % (impath)
-            if dry_run: continue
-            img = cv.imread(impath)
-            assert img is not None, 'Could not read %s %s' % (taxon, imname)
+            if dry_run:
+                continue
             print('[%d/%d] [%d/%d] %s %s' %
                   (i_t, len(taxons), i_i, len(imnames), taxon, imname))
-            func(img, *params)
-        if dry_run: print('%s has %d images' % (taxon, len(imnames)))
+            func(impath, (i_t, i_i), *params)
+        if dry_run:
+            print('%s has %d images' % (taxon, len(imnames)))
     if dry_run:
         print('dry-run finished')
         loop_images(func, params, taxons_path, dry_run=False)
