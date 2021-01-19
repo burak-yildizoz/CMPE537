@@ -12,7 +12,6 @@ def get_quantizer(method, descriptor):
 def compute_histograms(impath, indices, descriptor, quantizer,
                        hists, last_taxon_id, quants):
     taxon_id, img_id = indices
-    if img_id > 2: return
     img = cv.imread(impath)
     assert img is not None
     kps, desc = descriptor.detectAndCompute(img, None)
@@ -21,11 +20,11 @@ def compute_histograms(impath, indices, descriptor, quantizer,
         last_taxon_id[0] = taxon_id
         quant = np.mean(hists, axis=0)
         quants.append(quant)
-        hists = []
-    hists.append(hist)
+        del hists[:]
+    if hist is not None:
+        hists.append(hist)
 
 def findDictionary(data, k, max_iter=10):
-
     # random initialization
     centroids = data[np.random.choice(data.shape[0], k, replace=False)]
 
@@ -67,29 +66,37 @@ def featureQuantization(descriptor_list, centroids, num_photos, num_words):
         for w in words:
             im_features[i][w] += 1
     return im_features
-    
-  
+
+
 if __name__ == '__main__':
     import imgops
     from descriptors import get_descriptor
     import numpy as np
+    from timeit import default_timer as timer
     # parameters
     quantname = 'BOW'
     dictname = 'BOW'
+    num_cluster = 100
     descname = 'SIFT'
     desc_per_img = 20
     # initialize objects
-    vocab = imgops.load_array('vocab', dictname, descname, desc_per_img)
+    vocab = imgops.load_vocab(dictname, num_cluster, descname, desc_per_img)
     descriptor = get_descriptor(descname)
     quantizer = get_quantizer(quantname, descriptor)
-    # quantize descriptors
     quantizer.setVocabulary(vocab)
+    # quantize descriptors
+    start = timer()
     hists, last_taxon_id, quants = [], [1], []
     imgops.loop_images(compute_histograms, (descriptor, quantizer,
                                             hists, last_taxon_id, quants))
     quants.append(np.mean(hists, axis=0))
     quants = np.vstack(quants)
+    end = timer()
     # print and save the results
+    print('Quantization took %.1f seconds' % (end - start))
     print('mean histograms:', quants.shape)
-    name = 'quants_%s_%s_%s_%d' % (quantname, dictname, descname, desc_per_img)
+    name = 'quants_%s_%s_%d_%s_%d' % (quantname, dictname, num_cluster,
+                                      descname, desc_per_img)
     imgops.save_array(name, quants)
+    #quants = imgops.load_quants(quantname, dictname, num_cluster,
+    #                            descname, desc_per_img)

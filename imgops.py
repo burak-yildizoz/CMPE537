@@ -43,8 +43,17 @@ def save_array(name, array):
     np.save(path, array)
     print('Saved to', path)
 
-def load_array(arrtype, dictname, descname, desc_per_img):
-    assert arrtype in ['descs', 'vocab']
-    name = '%s_%s_%s_%d' % (arrtype, dictname, descname, desc_per_img)
+def load_descs(descname, desc_per_img):
+    name = 'descs_%s_%d' % (descname, desc_per_img)
+    arr = np.load(NPYDIR + name + '.npy')
+    return arr
+
+def load_vocab(dictname, num_cluster, descname, desc_per_img):
+    name = 'vocab_%s_%d_%s_%d' % (dictname, num_cluster, descname, desc_per_img)
+    arr = np.load(NPYDIR + name + '.npy')
+    return arr
+
+def load_quants(quantname, dictname, num_cluster, descname, desc_per_img):
+    name = 'quants_%s_%s_%d_%s_%d' % (quantname, dictname, num_cluster, descname, desc_per_img)
     arr = np.load(NPYDIR + name + '.npy')
     return arr

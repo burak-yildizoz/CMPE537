@@ -1,6 +1,9 @@
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 
+# X: [number of images x number of clusters]
+# y: label for each image
+
 def TrainClassifier(classifier_name, parameters, X, y):
 
     if classifier_name == 'SVM':
