@@ -24,7 +24,7 @@ def compute_histograms(impath, indices, descriptor, quantizer,
         hists = []
     hists.append(hist)
 
-def findDictionary(data, k, max_iter):
+def findDictionary(data, k, max_iter=10):
 
     # random initialization
     centroids = data[np.random.choice(data.shape[0], k, replace=False)]
