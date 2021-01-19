@@ -24,6 +24,51 @@ def compute_histograms(impath, indices, descriptor, quantizer,
         hists = []
     hists.append(hist)
 
+def findDictionary(data, k, max_iter):
+
+    # random initialization
+    centroids = data[np.random.choice(data.shape[0], k, replace=False)]
+
+    # k-means ++ initialization
+    """np.random.seed(42)
+    centroids = [data[0]]
+
+    for i in range(1, k):
+        dist_sq = np.array([min([np.inner(c - x, c - x) for c in centroids]) for x in data])
+        probs = dist_sq / dist_sq.sum()
+        cumulative_probs = probs.cumsum()
+        r = np.random.rand()
+        print(i)
+        for j, p in enumerate(cumulative_probs):
+            if r < p:
+                i = j
+                break
+
+        centroids.append(data[i])"""
+
+    ind = np.zeros((data.shape[0], 1))
+
+    for iter_num in range(max_iter):
+
+        for i in range(data.shape[0]):
+            delta = norm((data[i, :] - centroids), axis=1)
+            ind[i, :] = np.argmin(delta)
+
+        for j in range(k):
+            centroids[j, :] = np.mean(data[ind[:, 0] == j, :], axis=0)
+        print(iter_num)
+    return centroids
+
+
+def featureQuantization(descriptor_list, centroids, num_photos, num_words):
+    im_features = np.zeros((num_photos, num_words), "float32")
+    for i in range(num_photos):
+        words, distance = vq(descriptor_list[i], centroids)
+        for w in words:
+            im_features[i][w] += 1
+    return im_features
+    
+  
 if __name__ == '__main__':
     import imgops
     from descriptors import get_descriptor
