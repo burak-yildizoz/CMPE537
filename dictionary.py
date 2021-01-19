@@ -9,7 +9,7 @@ def get_dictionary(dictname, num_cluster):
     else:
         raise Exception('Invalid option')
 
-def add_descriptors(impath, indices, dictionary, descriptor, desc_per_img=20):
+def func_add_descriptors(impath, indices, dictionary, descriptor, desc_per_img=20):
     img = cv.imread(impath)
     assert img is not None
     _, desc = descriptor.detectAndCompute(img, None)
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     # collect descriptors
     # descriptors should be independent from dictionary
     start = timer()
-    imgops.loop_images(add_descriptors, (dictionary, descriptor, desc_per_img))
+    imgops.loop_images(func_add_descriptors, (dictionary, descriptor, desc_per_img))
     descs = np.vstack(dictionary.getDescriptors())
     end = timer()
     # print and save the results
