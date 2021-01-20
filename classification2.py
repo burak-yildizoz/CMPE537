@@ -4,19 +4,57 @@ from sklearn.neural_network import MLPClassifier
 # X: [number of images x number of clusters]
 # y: label for each image
 
+def findClassifier(classifier_name, X, y):
+
+    if classifier_name == 'SVM':
+
+        model = SVC()
+
+        parameter_space = {
+            'C': [100, 200, 500, 1000, 2000],
+            'kernel': ['linear'],
+            'class_weight': ['balanced'],
+        }
+
+        svm = GridSearchCV(model, parameter_space, cv=5)
+        svm.fit(X, y)
+
+        return svm
+
+    if classifier_name == 'MLP':
+
+        model = MLPClassifier()
+
+        parameter_space = {
+            'hidden_layer_sizes': [(10, 30, 10), (100,)],
+            'max_iter': [300, 400, 500],
+            'learning_rate': ['constant', 'adaptive'],
+        }
+
+        mlp = GridSearchCV(model, parameter_space, cv=5)
+        mlp.fit(X, y)
+
+        return mlp
+
+    if classifier_name == 'KNN':
+        model = 'To be added'
+        
 def TrainClassifier(classifier_name, parameters, X, y):
 
     if classifier_name == 'SVM':
+        
+        # To find best parameters for SVM
+        # model = findClassifier(classifier_name)
+        # return model
+        
         c = parameters[0]
         model = SVC(C=c, kernel='linear', class_weight='balanced')
         return model.fit(X,y)
 
     elif classifier_name == 'MLP':
-        layers = parameters[0]
-        lr = parameters[1]
-        max_iter = parameters[2]
-        model = MLPClassifier(hidden_layer_sizes = layers, learning_rate = lr, max_iter=max_iter)
-        return model.fit(X,y)
+        
+        model = findClassifier(classifier_name, X, y)
+        return model
 
     elif classifier_name == 'kNN':
         k = parameters[0]
