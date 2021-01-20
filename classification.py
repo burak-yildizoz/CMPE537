@@ -1,10 +1,42 @@
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 import cv2 as cv
+import numpy as np
 from quantization import get_hist
 
 # X: [number of images x number of clusters]
 # y: label for each image
+
+class KNN:
+    def __init__(self, k):
+        self.k = k
+    def fit(self, X, y):
+        self.num_cluster = X.shape[1]
+        self.X = np.copy(X)
+        self.y = np.copy(y)
+        return self
+    def predict(self, X_test):
+        y_predict = np.zeros((X_test.shape[0],))
+        for i, x in enumerate(X_test):
+            # distance between the histogram and all cluster
+            norms = np.linalg.norm(self.X - x, axis=1)
+            # minimum k indices
+            idx = np.argpartition(norms, self.k)[:self.k]
+            # minimum k distances
+            dists = norms[idx]
+            # corresponding labels
+            labels = y[idx]
+            values, counts = np.unique(labels, return_counts=True)
+            # maximum occuring labels
+            occurs = values[counts == np.max(counts)]
+            if len(occurs) == 1:
+                y_predict[i] = occurs[0]
+            else:
+                # multiple labels are candidate for being the closest k
+                # choose the one with minimum distance
+                mask = np.isin(labels, occurs)
+                y_predict[i] = labels[mask][np.argmin(dists[mask])]
+        return y_predict
 
 def TrainClassifier(classifier_name, parameters, X, y):
 
@@ -21,9 +53,14 @@ def TrainClassifier(classifier_name, parameters, X, y):
         model = MLPClassifier(hidden_layer_sizes = layers, learning_rate = lr)
         return model.fit(X,y)
 
-    elif classifier_name == 'kNN':
+    elif classifier_name == 'KNN':
         k = parameters[0]
-        return ('To be added')
+        model = KNN(k)
+        # to use the external library
+        # https://scikit-learn.org/stable/modules/generated/sklearn.neighbors.KNeighborsClassifier.html
+        # from sklearn.neighbors import KNeighborsClassifier
+        # model = KNeighborsClassifier(n_neighbors=k)
+        return model.fit(X, y)
 
     else:
         raise Exception('Invalid option')
@@ -36,9 +73,8 @@ def TestClassifier(classifier_name, model, X_test):
     elif classifier_name == 'MLP':
         return model.predict(X_test)
 
-    elif classifier_name == 'kNN':
-        model.predict()
-        return ('To be added')
+    elif classifier_name == 'KNN':
+        return model.predict(X_test)
 
     else:
         raise Exception('Invalid option')
@@ -54,7 +90,6 @@ def func_compute_histograms(impath, indices, descriptor, quantizer, X, y):
     y.append(taxon_id)
 
 if __name__ == '__main__':
-    import numpy as np
     import imgops
     from timeit import default_timer as timer
 
@@ -93,6 +128,7 @@ if __name__ == '__main__':
     # classification parameters
     classifier_name, parameters = 'SVM', [1.0]
     classifier_name, parameters = 'MLP', [100, 'constant']
+    classifier_name, parameters = 'KNN', [5]
     # train the classifier
     start = timer()
     model = TrainClassifier(classifier_name, parameters, X, y)
