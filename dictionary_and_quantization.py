@@ -2,6 +2,7 @@ import numpy as np
 from scipy.cluster.vq import vq
 from numpy.linalg import norm
 
+
 def findDictionary(data, k=100, max_iter=10):
 
     # random initialization
@@ -17,7 +18,10 @@ def findDictionary(data, k=100, max_iter=10):
 
         for j in range(k):
             centroids[j, :] = np.mean(data[ind[:, 0] == j, :], axis=0)
+    print("K-Means Iteration Number:", iter_num)
+
     return centroids
+
 
 def featureQuantization(descriptor_list, centroids):
     num_images = len(descriptor_list)
@@ -30,6 +34,6 @@ def featureQuantization(descriptor_list, centroids):
             im_features[i][w] += 1
             
     # Normalize the image features such that L1 norm of each image is 1:
-    im_features = im_features / np.sum(np.abs(im_features) , axis=1).reshape((im_features.shape[0],1))
+    im_features = im_features / np.sum(np.abs(im_features), axis=1).reshape((im_features.shape[0], 1))
         
     return im_features
