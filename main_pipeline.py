@@ -3,21 +3,24 @@ import data_read
 import dictionary_and_quantization
 import classification2
 import evaluation
+from sklearn.metrics import plot_confusion_matrix
+import matplotlib.pyplot as plt
+
 
 # Parameters to be chosen:
-descriptor = 'HOG'
+descriptor = 'ORB'
 k = 100 # number of words in the dictionary
-max_iter = 2 # number of iterations for the k-means algorithm applied for finding the dictionary
-classifier_type = 'SVM'
-parameters = [400] # regularization parameter for SVM
-#parameters = [(20,20), 0.01, 100] # hidden layer info, learninig rate, and epoch number for MLP
+max_iter = 5 # number of iterations for the k-means algorithm applied for finding the dictionary
+classifier_type = 'MLP'
+#parameters = [400] # regularization parameter for SVM
+parameters = [(100, )] # hidden layer info for  MLP
 #parameters = [5] # k parameter for kNN
 
 # training_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20/training'
 # test_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20/testing'
 
-training_directory = 'C:/Users/Umit/PycharmProjects/ImageClassification/Caltech20/training'
-test_directory = 'C:/Users/Umit/PycharmProjects/ImageClassification/Caltech20/testing'
+training_directory = 'C:/Users/Umit/PycharmProjects/CmpE537_HW3/Caltech20/training'
+test_directory = 'C:/Users/Umit/PycharmProjects/CmpE537_HW3/Caltech20/testing'
 
 # Read the training and test data. While reading each image, the descriptors are extracted as well.
 print('Reading the training data may take a while. Please wait...')
@@ -44,5 +47,12 @@ print('CLass predictions of test data is done')
 MeanF1, precision, recall, F1, conf_matrix = evaluation.Scores(y_test, y_predict)
 accuracy = 100 * np.sum(y_predict == y_test) / y_test.shape[0]
 
-print(accuracy)
-print(MeanF1)
+print("MeanF1:", MeanF1)
+print("precision:", precision)
+print("recall:",recall)
+print("F1:", F1)
+print("conf_matrix:", conf_matrix)
+print("accuracy:", accuracy)
+
+plot_confusion_matrix(model, X_test, y_test)
+plt.show()
