@@ -11,9 +11,9 @@ import evaluation
 clustername = 'BOW'
 num_cluster = 300
 descname = 'SIFT'
-classifier_name, parameters = 'KNN', [5]
-classifier_name, parameters = 'SVM', [1.0]
-classifier_name, parameters = 'MLP', [100, 'constant']
+#classifier_name, parameters = 'KNN', [5]
+classifier_name, parameters = 'SVM', [200]
+#classifier_name, parameters = 'MLP', [100, 'constant']
 traindir = 'Dataset/Caltech20/training'
 testdir = traindir + '/../testing'
 # collect descriptors
@@ -84,3 +84,8 @@ MeanF1, precision, recall, F1, conf_matrix = evaluation.Scores(truth, predict)
 print('MeanF1', MeanF1)
 print('precision', precision)
 print('recall', recall)
+if classifier_name != 'KNN':
+    from sklearn.metrics import plot_confusion_matrix
+    import matplotlib.pyplot as plt
+    plot_confusion_matrix(model, X_test, truth)
+    plt.show()
