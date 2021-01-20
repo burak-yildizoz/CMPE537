@@ -62,13 +62,14 @@ def DataReadTrain(direct, descriptor='HOG'):
     classNameDic = {}
     
     for cls, class_name in enumerate(os.listdir(direct)):
-        classNameDic.update({class_name : cls})
-        
-        class_dir = direct+'/'+class_name
+        classNameDic.update({class_name: cls})
+
+        print("Class Name:", class_name)
+        class_dir = direct + '/' + class_name
         for im_name in os.listdir(class_dir):
             
             # Read the image as a (x,y,3) numpy array:
-            image = cv.imread(class_dir+'/'+im_name)
+            image = cv.imread(class_dir + '/' + im_name)
             
             # Find the descriptors of the image:
             if descriptor == 'HOG':
@@ -86,17 +87,18 @@ def DataReadTrain(direct, descriptor='HOG'):
     y = np.array(y)
     return descs, X, y, classNameDic
 
+
 def DataReadTest(direct, classNameDic, descriptor='HOG'):
     y = [] # We will collect the labels of dataset in this list
     X = [] # This will be our dataset
     
     for class_name in os.listdir(direct):
         cls = classNameDic[class_name]
-        class_dir = direct+'/'+class_name
+        class_dir = direct + '/' + class_name
         for im_name in os.listdir(class_dir):
        
             # Read the image as a (x,y,3) numpy array:
-            image = cv.imread(class_dir+'/'+im_name)
+            image = cv.imread(class_dir + '/' + im_name)
             
             # Find the descriptors of the image:
             if descriptor == 'HOG':
