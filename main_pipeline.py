@@ -6,15 +6,18 @@ import evaluation
 
 # Parameters to be chosen:
 descriptor = 'HOG'
-k = 250 # number of words in the dictionary
-max_iter = 10 # number of iterations for the k-means algorithm applied for finding the dictionary
+k = 100 # number of words in the dictionary
+max_iter = 2 # number of iterations for the k-means algorithm applied for finding the dictionary
 classifier_type = 'SVM'
 parameters = [400] # regularization parameter for SVM
 #parameters = [(20,20), 0.01, 100] # hidden layer info, learninig rate, and epoch number for MLP
 #parameters = [5] # k parameter for kNN
 
-training_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20/training'
-test_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20/testing'
+# training_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20/training'
+# test_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20/testing'
+
+training_directory = 'C:/Users/Umit/PycharmProjects/ImageClassification/Caltech20/training'
+test_directory = 'C:/Users/Umit/PycharmProjects/ImageClassification/Caltech20/testing'
 
 # Read the training and test data. While reading each image, the descriptors are extracted as well.
 print('Reading the training data may take a while. Please wait...')
@@ -41,3 +44,5 @@ print('CLass predictions of test data is done')
 MeanF1, precision, recall, F1, conf_matrix = evaluation.Scores(y_test, y_predict)
 accuracy = 100 * np.sum(y_predict == y_test) / y_test.shape[0]
 
+print(accuracy)
+print(MeanF1)
