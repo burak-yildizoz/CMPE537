@@ -67,9 +67,6 @@ def DataReadTrain(direct, descriptor='HOG'):
         class_dir = direct+'/'+class_name
         for im_name in os.listdir(class_dir):
             
-            # Save the class label of the image:
-            y.append(cls)
-            
             # Read the image as a (x,y,3) numpy array:
             image = cv.imread(class_dir+'/'+im_name)
             
@@ -78,12 +75,13 @@ def DataReadTrain(direct, descriptor='HOG'):
                 _, descriptors = HOG(image)
             elif descriptor == 'SIFT':
                 _, descriptors = cv.xfeatures2d.SIFT_create().detectAndCompute(image, None)
-            elif descriptor == 'SURF':
-                _, descriptors = cv.xfeatures2d.SURF_create().detectAndCompute(image, None)
-            
-            X.append(list(descriptors))
-            descs = descs + list(descriptors)
-    
+            elif descriptor == 'ORB':
+                _, descriptors = cv.ORB_create().detectAndCompute(image, None)
+            if descriptors is not None:
+                y.append(cls)
+                X.append(list(descriptors))
+                descs = descs + list(descriptors)
+             
     descs = np.array(descs)
     y = np.array(y)
     return descs, X, y, classNameDic
@@ -96,10 +94,7 @@ def DataReadTest(direct, classNameDic, descriptor='HOG'):
         cls = classNameDic[class_name]
         class_dir = direct+'/'+class_name
         for im_name in os.listdir(class_dir):
-            
-            # Save the class label of the image:
-            y.append(cls)
-            
+       
             # Read the image as a (x,y,3) numpy array:
             image = cv.imread(class_dir+'/'+im_name)
             
@@ -108,9 +103,11 @@ def DataReadTest(direct, classNameDic, descriptor='HOG'):
                 _, descriptors = HOG(image)
             elif descriptor == 'SIFT':
                 _, descriptors = cv.xfeatures2d.SIFT_create().detectAndCompute(image, None)
-            elif descriptor == 'SURF':
-                _, descriptors = cv.xfeatures2d.SURF_create().detectAndCompute(image, None)
-            
-            X.append(list(descriptors))
+            elif descriptor == 'ORB':
+                _, descriptors = cv.ORB_create().detectAndCompute(image, None)
+            if descriptors is not None:
+                y.append(cls)
+                X.append(list(descriptors))
+                
     y = np.array(y)
     return X, y
