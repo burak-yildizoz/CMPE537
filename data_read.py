@@ -34,9 +34,10 @@ def HOG(image):
     
     # Create an empty array for the descriptor with proper dimensions:
     hist = np.zeros((kp.shape[0] , num_of_bins)) 
+    kp = np.rint(kp)
     
     for i in range(kp.shape[0]):
-        kp_coor = np.rint(kp[i,:])
+        kp_coor = kp[i,:]
         
         # Create a mask around the keypoint i:
         mask = np.zeros(image.shape, np.uint8)
@@ -51,7 +52,6 @@ def HOG(image):
         hist[i,:] = hist_window[:,0]
 
     return kp, hist
-
 
 def DataReadTrain(direct, descriptor='HOG'):
     y = [] # We will collect the labels of dataset in this list
