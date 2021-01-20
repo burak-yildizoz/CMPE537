@@ -1,7 +1,7 @@
 import cv2 as cv
 
-def get_quantizer(method, descriptor):
-    if method == 'BOW':
+def get_quantizer(quantname, descriptor):
+    if quantname == 'BOW':
         # https://docs.opencv.org/3.4.2/db/d39/classcv_1_1DescriptorMatcher.html
         matcher = cv.FlannBasedMatcher()
         # https://docs.opencv.org/3.4.2/d2/d6b/classcv_1_1BOWImgDescriptorExtractor.html
@@ -9,13 +9,17 @@ def get_quantizer(method, descriptor):
     else:
         raise Exception('Invalid option')
 
-def compute_histograms(impath, indices, descriptor, quantizer,
-                       hists, last_taxon_id, quants):
+def get_hist(img, descriptor, quantizer):
+    kps, desc = descriptor.detectAndCompute(img, None)
+    hist = quantizer.compute(img, kps, desc)
+    return hist
+
+def func_compute_histograms(impath, indices, descriptor, quantizer,
+                            hists, last_taxon_id, quants):
     taxon_id, img_id = indices
     img = cv.imread(impath)
     assert img is not None
-    kps, desc = descriptor.detectAndCompute(img, None)
-    hist = quantizer.compute(img, kps, desc)
+    hist = get_hist(img, descriptor, quantizer)
     if last_taxon_id[0] != taxon_id:
         last_taxon_id[0] = taxon_id
         quant = np.mean(hists, axis=0)
@@ -87,8 +91,8 @@ if __name__ == '__main__':
     # quantize descriptors
     start = timer()
     hists, last_taxon_id, quants = [], [1], []
-    imgops.loop_images(compute_histograms, (descriptor, quantizer,
-                                            hists, last_taxon_id, quants))
+    imgops.loop_images(func_compute_histograms,
+                       (descriptor, quantizer, hists, last_taxon_id, quants))
     quants.append(np.mean(hists, axis=0))
     quants = np.vstack(quants)
     end = timer()
