@@ -53,9 +53,14 @@ def TrainClassifier(classifier_name, parameters, X, y):
 
     elif classifier_name == 'MLP':
         
-        model = findClassifier(classifier_name, X, y)
-        return model
+        # To find best parameters for MLP
+        # model = findClassifier(classifier_name, X, y)
+        # return model
 
+        hls = parameters[0]
+        model = MLPClassifier(hidden_layer_sizes=hls, learning_rate='adaptive', max_iter=300,)
+        return model.fit(X, y)
+        
     elif classifier_name == 'kNN':
         k = parameters[0]
         return ('To be added')
