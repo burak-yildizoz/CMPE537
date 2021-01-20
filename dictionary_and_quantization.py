@@ -21,12 +21,15 @@ def findDictionary(data, k=100, max_iter=10, method='libKmeans'):
             for j in range(k):
                 centroids[j, :] = np.mean(data[ind[:, 0] == j, :], axis=0)
             print("K-Means Iteration Number:", iter_num)
+    
     elif method=='libKmeans':
         centroids = KMeans(n_clusters=k, n_init=2, random_state=0, max_iter=400).fit(data)
-        return centroids
+    
+    return centroids
 
 
 def featureQuantization(descriptor_list, centroids, k=100, method='libKmeans'):
+    
     if method=='impKmeans':
         num_images = len(descriptor_list)
         num_words = centroids.shape[0]
@@ -39,6 +42,7 @@ def featureQuantization(descriptor_list, centroids, k=100, method='libKmeans'):
                 
         # Normalize the image features such that L1 norm of each image is 1:
         im_features = im_features / np.sum(np.abs(im_features), axis=1).reshape((im_features.shape[0], 1))
+    
     elif method=='libKmeans':
         features = []
         for i in range(len(descriptor_list)):
