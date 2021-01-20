@@ -12,6 +12,8 @@ clustername = 'BOW'
 num_cluster = 300
 descname = 'SIFT'
 classifier_name, parameters = 'KNN', [5]
+classifier_name, parameters = 'SVM', [1.0]
+classifier_name, parameters = 'MLP', [100, 'constant']
 traindir = 'Dataset/Caltech20/training'
 testdir = traindir + '/../testing'
 # collect descriptors
@@ -27,6 +29,7 @@ for taxon in taxons:
 descs = np.vstack([desc for _, desc in features for features in featuresdict.values() if desc is not None])
 dictionary = dictionary.get_dictionary(clustername, num_cluster)
 dictionary.add(descs)
+print('Cluster!')
 vocab = dictionary.cluster()
 # collect histograms
 quantizer = quantization.get_quantizer(clustername, descriptor)
@@ -63,10 +66,12 @@ X_test =  np.vstack(X_test)
 np.save('X.npy', X)
 np.save('y.npy', y)
 np.save('X_test.npy', X_test)
+np.save('truth.npy', truth)
 # load
 X = np.load('X.npy')
 y = np.load('y.npy')
 X_test = np.load('X_test.npy')
+truth =  np.load('truth.npy')
 # classify histograms
 print('Training model')
 model = classification.TrainClassifier(classifier_name, parameters, X, y)
