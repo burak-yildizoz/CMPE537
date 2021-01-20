@@ -1,4 +1,5 @@
 import cv2 as cv
+import os
 
 class HOG:
     def detectAndCompute(self, image, dummy=1):
@@ -62,6 +63,19 @@ def get_descriptor(descname):
         return HOG()
     else:
         raise Exception('Invalid option')
+
+def features_in_dir(descriptor, directory, print_progress=False):
+    features  = []
+    imnames = os.listdir(directory)
+    for i, imname in enumerate(imnames, start=1):
+        if print_progress:
+            print('[%d/%d] Reading %s' % (i, len(imnames), imname))
+        impath = os.path.join(directory, imname)
+        img = cv.imread(impath)
+        assert img is not None, 'Could not open image %s' % (impath)
+        feature = descriptor.detectAndCompute(img, None)
+        features.append(feature)
+    return features
 
 if __name__ == '__main__':
     import imgops

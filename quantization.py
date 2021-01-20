@@ -1,4 +1,5 @@
 import cv2 as cv
+import os
 
 def get_quantizer(quantname, descriptor):
     if quantname == 'BOW':
@@ -71,6 +72,22 @@ def featureQuantization(descriptor_list, centroids, num_photos, num_words):
             im_features[i][w] += 1
     return im_features
 
+def hists_in_dir(quantizer, features, directory, print_progress=False):
+    imnames = os.listdir(directory)
+    #assert len(features) == len(imnames), 'len(features) = %d, directory: %s, # of files: %d' % (len(features), directory, len(imnames))
+    hists = []
+    for i, imname in enumerate(imnames):
+        kps, desc = features[i]
+        if desc is None:
+            continue
+        if print_progress:
+            print('[%d/%d] Reading %s' % (i + 1, len(imnames), imname))
+        impath = os.path.join(directory, imname)
+        img = cv.imread(impath)
+        assert img is not None, 'Could not open image %s' % (impath)
+        hist = quantizer.compute(img, kps, desc)
+        hists.append(hist)
+    return hists
 
 if __name__ == '__main__':
     import imgops

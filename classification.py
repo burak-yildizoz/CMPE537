@@ -25,7 +25,7 @@ class KNN:
             # minimum k distances
             dists = norms[idx]
             # corresponding labels
-            labels = y[idx]
+            labels = self.y[idx]
             values, counts = np.unique(labels, return_counts=True)
             # maximum occuring labels
             occurs = values[counts == np.max(counts)]
@@ -139,6 +139,6 @@ if __name__ == '__main__':
     predict = TestClassifier(classifier_name, model, X_test)
     end = timer()
     # print results
-    print('Test took %.1f seconds' % (end - start))
+    print('Self test took %.1f seconds' % (end - start))
     accuracy = np.count_nonzero(predict == y) / len(y)
     print('accuracy: %.1f%%' % (100 * accuracy))
