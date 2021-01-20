@@ -10,20 +10,20 @@ import matplotlib.pyplot as plt
 
 
 # Parameters to be chosen:
-method = 'libKmeans' # Choose 'linKmeans' for scikit learns k-means; choose 'impKmeans' for our own implementation
+method = 'libKmeans' # Choose 'libKmeans' for scikit learns k-means; choose 'impKmeans' for our own implementation
 descriptor = 'HOG' # Choose 'HOG', 'SIFT', or 'ORB'
-k = 275 # number of words in the dictionary
-max_iter = 10 # number of iterations for the k-means algorithm applied for finding the dictionary
+k = 100 # number of words in the dictionary
+max_iter = 2 # number of iterations for the k-means algorithm applied for finding the dictionary
 classifier_type = 'SVM' # 'SVM', 'MLP', 'kNN'
 parameters = [300] # regularization parameter for SVM
 #parameters = [(100, )] # hidden layer info for  MLP
 #parameters = [5] # k parameter for kNN
 
-training_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20_v2/training'
-test_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20_v2/testing'
+#training_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20_v2/training'
+#test_directory = 'C:/Users/oguzh/Desktop/Graduate_Courses/CMPE 537 Computer Vision/HW3/Caltech20_v2/testing'
 
-# training_directory = 'C:/Users/Umit/PycharmProjects/CmpE537_HW3/Caltech20/training'
-# test_directory = 'C:/Users/Umit/PycharmProjects/CmpE537_HW3/Caltech20/testing'
+training_directory = 'C:/Users/Umit/PycharmProjects/CmpE537_HW3/Caltech20/training'
+test_directory = 'C:/Users/Umit/PycharmProjects/CmpE537_HW3/Caltech20/testing'
 
 # Read the training and test data. While reading each image, the descriptors are extracted as well.
 print('Reading the training data may take a while. Please wait...')
@@ -53,9 +53,8 @@ accuracy = 100 * np.sum(y_predict == y_test) / y_test.shape[0]
 
 print("MeanF1:", MeanF1)
 print("precision:", precision)
-print("recall:",recall)
+print("recall:", recall)
 print("F1:", F1)
-print("conf_matrix:", conf_matrix)
 print("accuracy:", accuracy)
 
 plot_confusion_matrix(model, X_test, y_test)
