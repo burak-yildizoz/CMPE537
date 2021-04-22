@@ -5,6 +5,8 @@ Assignment 3 - Local Descriptor based Image Classification
 
 [Moodle Page](https://moodle.boun.edu.tr/mod/assign/view.php?id=313570)
 
+See **`CMPE_537_Assignment_3_Report.pdf`** in this folder.
+
 ## Installation
 
     $ pip install -r requirements.txt
