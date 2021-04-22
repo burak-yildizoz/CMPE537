@@ -1,0 +1,82 @@
+Assignment 1: Color Quantization and Connected Component Analysis
+Part 1: Color Quantization:
+
+Color quantization is the process of reducing the number of colors used in an image while trying to maintain the visual appearance of the original image. In general, it is a form of cluster analysis, if each RGB color value is considered as a coordinate triple in the 3D colorspace.  The following example shows an RGB image (~16 Million possible colors) quantized using 2,4,8,16,32 colors.
+
+
+
+In your first assignment, you will be working on a Python implementation of basic image processing operations and color quantization techniques. 
+
+You are going to write the function "quantize(img, K)" that takes two inputs and returns a single output. The first input is an RGB formatted image and the second one is the number of colors (K) in an image we aim to quantize. The function is supposed to calculate the quantized version of the image using the following method:
+
+Convert input image to a matrix of pixels. Depending on your image size your matrix should be of size [height*width,3]
+Pick K initial colors to begin quantization. Use the following methods to initialize your algorithm
+Choose initial color centers manually, by clicking on the image: Using matplotlib librarys pyplot.ginput function, choose k points. Example code snippet to interactively select points from an image is provided at the end of this document.
+Choose initial color centers randomly. Pick color centers randomly using numpys numpy.random.uniform function.
+Using your own implementation of the k-means algorithm, cluster your color matrix and find K clusters and cluster centers. You may limit the maximum number of iterations to 10 or a suitable number depending on the size of your images.
+Generate an output image. In the output image, each pixel should have the color of the cluster-center that pixel has been assigned to.
+Once you are done with your image processing pipeline, you are going to experiment on the following images and present 2,4,8,16 and 32 color quantized versions of these images with both initialization methods in your report.
+
+Bonus - 1: Try using K-means using an uniform color coordinate system (Lab colorspace)
+
+Part 2: Connected Component Analysis:
+
+In this assignment, we are going to be implementing a connected component analysis algorithm. In the connected component analysis, we begin with a color based thresholding of the image. Following noise removal with morphological operations, we are left with an image that contains connected and disconnected regions. We can count the number of distinct connected regions to determine the number of distinct objects on an image such as the number of birds in the below image. 
+Image for postImage for post
+
+In order to perform connected component analysis and count the number of objects in the images given below, you should implement the countConnectedComponents(img,threshold) function. The method takes an image and a threshold value as input and returns the number of objects in the image as output. The methods you should implement can be described as follows:
+Read the given image and apply a thresholding function. The output of this function should give you a binary image where pixels have a value of [0,1] instead of [0-255].
+If needed apply morphological erosion or dilation to clean salt&pepper noise.
+Implement connected components analysis with 8 connected neighborhoods for each pixel. Traverse the image, going over all pixels to find foreground pixels. Once the first pixel of a connected component is found, all the connected pixels of that connected component are labeled before going onto the next pixel in the image.  Return the number of desired connected components. You may not use the functions present in the opencv (cv2) library or similar other libraries for this step other than numpy. 
+Once you are done with your connected components analysis pipeline optimize the usage of binarization thresholds, morphological operations and other necessary thresholding techniques for each of the five images below. For each image, return the binary image which was the input of the connected components analysis algorithm, and return the output of the count connected components function.
+
+
+
+Development Environment
+Installing Python
+
+Throughout the semester, we will be using Python 3 as our programming language. We recommend that you use Conda and PyCharm Professional Edition to setup your development environment and install the necessary libraries. 
+
+You can obtain from Miniconda. Follow the installation instructions for your operating system. Once the installation is complete, navigate to your installation directory on a command line / terminal and use the following commands to install the necessary libraries as follows:
+
+cd /path/to/your/miniconda/installation/bin/
+conda install opencv matplotlib numpy
+If you have added the miniconda/bin directory to your system path, you can test your installation by typing the following:
+
+python
+>> import cv2
+If there are no messages like 'module not found error' no module named 'cv2', your installation was successful. If you get the error message, please checkout OpenCV for Python.
+
+Installing an IDE
+
+We recommend that you use Visual Studio Code or  PyCharm as your IDE for ease of debugging. You are free to use any IDE of your choice. Below we explain the installation process of pycharm.
+
+Obtain PyCharm Professional Edition for free by first signing up as a student at https://www.jetbrains.com/shop/eform/students with your university email and then downloading the professional version of the software.
+
+Login to your new PyCharm account to obtain your username and password, and use them to register your IDE.
+
+Run PyCharm, open a new project. While creating the project, select the python environment you created for this project.
+
+Deliverables
+Project report (pdf & tex): A maximum two page pdf report file which includes small versions (resize images so that 4-5 of them should fit a single line) of all the requested figures, images and descriptions of the methods that you have implemented. Comment on the results and elaborate on your conclusions.  Do not print any source code in your report. 
+Source code (py files): Submit all of the functions you have implemented for the assignment in two separate files: (hw1_quantization_name_surname.py) and (hw2_quantization_name_surname.py).  Your submitted codes should have a "__main__" method for us to test your code without typing in any external arguments.
+
+For questions & comments please email alp.kindiroglu@boun.edu.tr
+
+
+WARNING! Submit all files as one zip file titled (hw1_name_surname.zip). Please send files in correct format. Use zip for packaging, do not use rar, 7z etc. If you are not able to upload your assignment files to Moodle, submit a cloud storage (Dropbox / google drive etc) link of the compressed package.
+
+
+Email address: alp.kindiroglu@boun.edu.tr
+
+Code Snippet For Interactively Selecting Points
+from PIL import Image
+from matplotlib import pyplot as plt                      
+plt.imshow(im)
+points = plt.ginput(3,show_clicks=True)
+print("clicked", points)
+im = Image.open("frog2.jpg")
+
+
+                        
+Note: If using pycharm you may need to do the following if ginput does not work. Under Settings => Tools => Python Scientific Uncheck the (only) box "Show plots in toolwindow". Future plots should appear "normally" and not in SciView.
